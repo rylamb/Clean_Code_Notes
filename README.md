@@ -1,5 +1,26 @@
 # Clean Code Notes
-## Error Handling
+1. [Clean Code]()
+2. [Meaningful Names]()
+3. [Functions]()
+4. [Comments]()
+5. [Formatting]()
+6. [Objects and Data Structures]()
+7. [Error Handling](#error-handling)
+8. [Boundaries]()
+
+## Clean Code <a name="clean-code"></a>
+
+## Meaningful Names<a name="meaningful-names"></a>
+
+## Functions <a name="functions"></a>
+
+## Comments <a name="comments"></a>
+
+## Formatting <a name="formatting"></a>
+
+## Objects and Data Structures <a name="objects-and-data-structures"></a>
+
+## Error Handling <a name="error-handling"></a>
 1. **Use Exceptions Rather Than Return Codes**
     - Error flags or returned error codes must be checked by the caller, cluttering code and obscuring function logic. It's cleaner to throw an exception when encountering and error.
 2. **Write Your _Try-Catch-Finally_ Statement First**
