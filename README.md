@@ -6,7 +6,7 @@
 5. [Formatting]()
 6. [Objects and Data Structures]()
 7. [Error Handling](#error-handling)
-8. [Boundaries]()
+8. [Boundaries](#boundaries)
 
 ## Clean Code <a name="clean-code"></a>
 
@@ -59,3 +59,40 @@
       ```
 12. Don't Pass Null
     - Unless working with an API which expects you to pass _null_, you should avoid passing _null_ whenever possible. In most languages there is no good way to deal with a _null_ that is passed by a caller accidentally, thus it makes sense to forbid passing _null_ by default [(See Lombok's @NonNull)](https://projectlombok.org/features/NonNull). Taking this approach allows allows you to assume that a _null_ in an argument list is an indication of a problem.
+
+## Boundaries <a name="boundaries"></a>
+1. **Using Third-Party Code**
+    - Consider the following code:
+        ```
+        Map sensors = new HashMap();
+        Sensor s = (Sensor)sensors.get(sensorId);
+        ```
+       In this scenario, the client carries the responsibility of getting an object from the map an casting it to the correct type. This code fails effectively tell it's whole story and can be cleaned up with the use of generics.
+       ```
+       Map<Sensor> sensors = new HashMap<>();
+       Sensor s = sensors.get(sensorId);
+       ```
+       Additionally, `Map` is a broad interface containing a number of default methods such as `clear()`. If we begin passing this Map around, suddenly any method that gets a hold of this object has the ability to start deleting items from it, even if we don't necessarily need/want them to. In this example we might restrict editting by using immutable or unmodifiable maps via `Map.of()` or `ImmutableMap.of()`. But what if we want more fine-grained control of what methods are available, and what if the underlying code of this third-party interface changes? Now consider the following:
+       ```
+       public class Sensors {
+           private Map sensors = new HashMap();
+           
+           public Sensor getById(String id) {
+               return (Sensor) sensors.get(id);
+           }
+       }
+       ```
+      In the above example the interface at the boundary (`Map`) is now hidden. The interface can be tailored and constrained to meet the needs of the application. The use of generics is no longer and issue because type management is isolated inside the `Sensors` class. Additionally, if the implementation of `Map` changes then the number of places to fix is limited since we aren't passing it all over the code. This may seem unlikely, but this exactly scenario became a real problem in Java 5 with the introduction of generics.
+      
+      Not every use of a `Map` needs to be isolated in this form. Rather, it is advised to not pass `Maps` (or any other interface at a boundary) around your system. If you use a boundary interface like `Map`, keep it inside the class, or close family of classes, where it is used. Avoid returning it from, or accepting it as an argument to, public APIs.
+      
+2. **Exploring and Learning Boundaries**
+    - Instead of immediately implementing third-party APIs, only to be bogged down in debugging sessions trying to determine if the bugs are in our code our theirs, consider writing _learning tests_. These tests can help us better understand how a third-party library functions in the scenarios that we intend to use them. (If we keep these tests around we may also immediately know when a third-party library has introduced a breaking change.)
+
+3. **Learning _log4j_**
+
+4. **Learning Tests Are Better Than Free**
+
+5. **Using Code That Does Not Yet Exist**
+
+6. **Clean Boundaries**
