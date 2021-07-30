@@ -116,28 +116,33 @@
 
 
 ## Unit Tests <a name="unittests"></a>
-1. **The Three Laws of TDD**
+1. **The Three Laws of TDD** <a name="unittests-1"></a>
     - _**First Law:**_ You may not write production code until you have written a failing unit test.
     - _**Second Law:**_ You may not write more of a unit test than is sufficient to fail, and not compiling is failing.
     - _**Third Law:**_ You may not write more production code than is sufficient to pass the currently failing test.
     
     These laws lock you into a cycle that is perhaps 30 seconds long. Tests and production code are written together, with dozens of tests written every day.
 
-2. **Keeping Tests Clean**
+2. **Keeping Tests Clean** <a name="unittests-2"></a>
     - Test quality must rival that of production code as it enables flexibility, maintanability, resuability, stability, etc. Dirty tests are equivalent to having no tests.  Tests must change as production code evolves. The dirtier the tests, the harder they are to change, and the more likely you are to spent more time cramming new tests into the suite than it takes to write new production code. As test quality degrades, the risk of defects increases. 
 
-3. **Clean Tests**
+3. **Clean Tests** <a name="unittests-3"></a>
     - Clean tests are defined by readability (consisting of clarity, simplicity, and density of expression). Say a lot with as little as possible. Leverage the [BUILD-OPERATE-CHECK](http://fitnesse.org/FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.AcceptanceTestPatterns.BuildOperateCheck) pattern to divide tests into three equals parts. The first part builds the data, the second part operates on that test data, and the third part checks that the operation yielded the expected results. 
         
         - _**Domain-Specific Testing Language:**_ As you continue to refactor test code to maintain readibility, rather than using the APIs that programmers use to manipulate the system, aim to build up a set of functions and utilities that make use of those APIs. Those functions and utilities becomes a testing languages that programmers can use to help write tests and those that read them later on.
         
         - _**A Dual Standard:**_ Tests must be simple, succinct, and expressive, but they do NOT need to be as efficient as production code.
 
-4. **One Assert per Test**
-    -
+4. **One Assert/Concept per Test Rule** <a name="unittests-4"></a>
+    - While a single assert is not always feasible, minimizing the number of asserts in a test helps to improve readability. Similarly, each test should have a single concept. Split up large tests into smaller tests using [GIVEN-WHEN-THEN](https://en.wikipedia.org/wiki/Given-When-Then) convention. Consider minimizing duplicate code by using the [TEMPLATE METHOD](https://en.wikipedia.org/wiki/Template_method_pattern) pattern and putting the _given/when_ parts in the base class, and the _then_ parts in different derivatives. Alternatively we could create a completely separate test class and put the _given_ and _when_ parts in the `@Before` function, and the _when_ parts in each `@Test` function.
 
-5. **F.I.R.S.T**
-    -
-
-6. **Conclusion**
-    -
+5. **F.I.R.S.T** <a name="unittests-5"></a>
+    - _**Fast:**_ Tests should run fast. Nobody wants to run slow tests. Still, they don't need to be as efficient as performance code (see [Clean Tests](#unittests-3))
+    
+    - _**Independent:**_ Tests should not depend on each other. You should be able to run them independently and in any order.
+    
+    - _**Repeatable:**_ Tests should be repeatable in any environment.
+    
+    - _**Self-Validating:**_ Tests should have a boolean output. Either the pass or fail.
+    
+    - _**Timely:**_ Tests need to be written in a timely fashion. Unit tests should be written _just before_ production code that makes them pass. If you write tests after the production code, then you may find the production code hard to test. Worse, you may find yourself writing tests to fit the production code, rather than production code that satisfies the tests.
