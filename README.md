@@ -36,7 +36,7 @@
     - Starting with a _try-catch-finally_ helps you define what the user of that code should expect, no matter what goes wrong with the code that is executed in the _try_. We can then proceed to build the rest of the logic that we need, and can pretend that nothing goes wrong. Try to write tests that force exceptions, and then add behavior to your handler to satisfy your tests.
 
 3. **Use Unchecked Exceptions**
-    - The price of checked exceptions is an [Open/Closed Principle](https://springframework.guru/principles-of-object-oriented-design/open-closed-principle/) violation. If you throw a checked exception fro a method in your code and the _catch_ is three levels above, you must declare that exception in the signature of each method between you and the _catch_. This means any changes at a a low level can force cascading signature changes up to the high level. In general, checked exceptions aren't worth it.
+    - The price of checked exceptions is an [_Open/Closed Principle_](https://springframework.guru/principles-of-object-oriented-design/open-closed-principle/) violation. If you throw a checked exception fro a method in your code and the _catch_ is three levels above, you must declare that exception in the signature of each method between you and the _catch_. This means any changes at a a low level can force cascading signature changes up to the high level. In general, checked exceptions aren't worth it.
 
 4. **Provide Context With Exceptions**
     - Stack traces can't tell you the intent of an operation. Create informative messages to pass with exceptions. Mention the operation that failed and the type of failure.
@@ -73,7 +73,7 @@
       ```
 
 12. **Don't Pass Null**
-    - Unless working with an API which expects you to pass _null_, you should avoid passing _null_ whenever possible. In most languages there is no good way to deal with a _null_ that is passed by a caller accidentally, thus it makes sense to forbid passing _null_ by default [(See Lombok's @NonNull)](https://projectlombok.org/features/NonNull). Taking this approach allows allows you to assume that a _null_ in an argument list is an indication of a problem.
+    - Unless working with an API which expects you to pass _null_, you should avoid passing _null_ whenever possible. In most languages there is no good way to deal with a _null_ that is passed by a caller accidentally, thus it makes sense to forbid passing _null_ by default [_(see Lombok's @NonNull)_](https://projectlombok.org/features/NonNull). Taking this approach allows allows you to assume that a _null_ in an argument list is an indication of a problem.
 
 
 ## Boundaries <a name="boundaries"></a>
@@ -109,10 +109,10 @@
     - Learning tests verify that the third-party packages we are using work the way we expect them to. Additionally, if third-party libraries are changed in a way that makes them incompatible with our tests, we find out right away. This helps us manage code breaking changes introduced by third-party libraries and ease the pain of migration to newer versions. We had to learn how to use the library anyway, so we might as well write some tests while we're at it.
 
 5. **Using Code That Does Not Yet Exist** <a name="boundaries-4"></a>
-    - Sometimes APIs are poorly documented black boxes, or simply don't offer the interface we'd like. In situations like this, consider designing the interface you wish you had, then create an [ADAPTER](https://en.wikipedia.org/wiki/Adapter_pattern) to encapsulate the interaction with the API. This provides a single place to change when the API evolves. Additionally, we can create fake adapters to test our interface, and create boundary tests to verify the API is being used correctly.
+    - Sometimes APIs are poorly documented black boxes, or simply don't offer the interface we'd like. In situations like this, consider designing the interface you wish you had, then create an [_ADAPTER_](https://en.wikipedia.org/wiki/Adapter_pattern) to encapsulate the interaction with the API. This provides a single place to change when the API evolves. Additionally, we can create fake adapters to test our interface, and create boundary tests to verify the API is being used correctly.
 
 6. **Clean Boundaries**
-    - Code at boundaries need clear separation and tests that define expectations. Avoid letting too much of our code know about third-party particulars and instead depend on something you control. Management of third-party boundaries can be accomplished by having very few places that refer to them (see [Using Third-Party Code](#boundaries-1) and [Using Code That Does Not Yet Exist](#boundaries-4)).
+    - Code at boundaries need clear separation and tests that define expectations. Avoid letting too much of our code know about third-party particulars and instead depend on something you control. Management of third-party boundaries can be accomplished by having very few places that refer to them _(see [Using Third-Party Code](#boundaries-1) and [Using Code That Does Not Yet Exist](#boundaries-4))_.
 
 
 ## Unit Tests <a name="unittests"></a>
@@ -127,17 +127,17 @@
     - Test quality must rival that of production code as it enables flexibility, maintanability, resuability, stability, etc. Dirty tests are equivalent to having no tests.  Tests must change as production code evolves. The dirtier the tests, the harder they are to change, and the more likely you are to spent more time cramming new tests into the suite than it takes to write new production code. As test quality degrades, the risk of defects increases. 
 
 3. **Clean Tests** <a name="unittests-3"></a>
-    - Clean tests are defined by readability (consisting of clarity, simplicity, and density of expression). Say a lot with as little as possible. Leverage the [BUILD-OPERATE-CHECK](http://fitnesse.org/FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.AcceptanceTestPatterns.BuildOperateCheck) pattern to divide tests into three equals parts. The first part builds the data, the second part operates on that test data, and the third part checks that the operation yielded the expected results. 
+    - Clean tests are defined by readability (consisting of clarity, simplicity, and density of expression). Say a lot with as little as possible. Leverage the [_BUILD-OPERATE-CHECK_](http://fitnesse.org/FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.AcceptanceTestPatterns.BuildOperateCheck) pattern to divide tests into three equals parts. The first part builds the data, the second part operates on that test data, and the third part checks that the operation yielded the expected results. 
         
         - _**Domain-Specific Testing Language:**_ As you continue to refactor test code to maintain readibility, rather than using the APIs that programmers use to manipulate the system, aim to build up a set of functions and utilities that make use of those APIs. Those functions and utilities becomes a testing languages that programmers can use to help write tests and those that read them later on.
         
         - _**A Dual Standard:**_ Tests must be simple, succinct, and expressive, but they do NOT need to be as efficient as production code.
 
 4. **One Assert/Concept per Test Rule** <a name="unittests-4"></a>
-    - While a single assert is not always feasible, minimizing the number of asserts in a test helps to improve readability. Similarly, each test should have a single concept. Split up large tests into smaller tests using [GIVEN-WHEN-THEN](https://en.wikipedia.org/wiki/Given-When-Then) convention. Consider minimizing duplicate code by using the [TEMPLATE METHOD](https://en.wikipedia.org/wiki/Template_method_pattern) pattern and putting the _given/when_ parts in the base class, and the _then_ parts in different derivatives. Alternatively we could create a completely separate test class and put the _given_ and _when_ parts in the `@Before` function, and the _when_ parts in each `@Test` function.
+    - While a single assert is not always feasible, minimizing the number of asserts in a test helps to improve readability. Similarly, each test should have a single concept. Split up large tests into smaller tests using [_GIVEN-WHEN-THEN_](https://en.wikipedia.org/wiki/Given-When-Then) convention. Consider minimizing duplicate code by using the [_TEMPLATE METHOD_](https://en.wikipedia.org/wiki/Template_method_pattern) pattern and putting the _given/when_ parts in the base class, and the _then_ parts in different derivatives. Alternatively we could create a completely separate test class and put the _given_ and _when_ parts in the `@Before` function, and the _when_ parts in each `@Test` function.
 
 5. **F.I.R.S.T** <a name="unittests-5"></a>
-    - _**Fast:**_ Tests should run fast. Nobody wants to run slow tests. Still, they don't need to be as efficient as performance code (see [Clean Tests](#unittests-3))
+    - _**Fast:**_ Tests should run fast. Nobody wants to run slow tests. Still, they don't need to be as efficient as performance code _(see [Clean Tests](#unittests-3))_.
     
     - _**Independent:**_ Tests should not depend on each other. You should be able to run them independently and in any order.
     
