@@ -61,7 +61,7 @@
     - Unless working with an API which expects you to pass _null_, you should avoid passing _null_ whenever possible. In most languages there is no good way to deal with a _null_ that is passed by a caller accidentally, thus it makes sense to forbid passing _null_ by default [(See Lombok's @NonNull)](https://projectlombok.org/features/NonNull). Taking this approach allows allows you to assume that a _null_ in an argument list is an indication of a problem.
 
 ## Boundaries <a name="boundaries"></a>
-1. **Using Third-Party Code**
+1. **Using Third-Party Code** <a name="boundaries-1"></a>
     - Consider the following code:
         ```
         Map sensors = new HashMap();
@@ -86,13 +86,14 @@
       
       Not every use of a `Map` needs to be isolated in this form. Rather, it is advised to not pass `Maps` (or any other interface at a boundary) around your system. If you use a boundary interface like `Map`, keep it inside the class, or close family of classes, where it is used. Avoid returning it from, or accepting it as an argument to, public APIs.
       
-2. **Exploring and Learning Boundaries**
-    - Instead of immediately implementing third-party APIs, only to be bogged down in debugging sessions trying to determine if the bugs are in our code our theirs, consider writing _learning tests_. These tests can help us better understand how a third-party library functions in the scenarios that we intend to use them. (If we keep these tests around we may also immediately know when a third-party library has introduced a breaking change.)
+2. **Exploring and Learning Boundaries** <a name="boundaries-2"></a>
+    - Instead of immediately implementing third-party APIs, only to be bogged down in debugging sessions trying to determine if the bugs are in our code our theirs, consider writing _learning tests_. These tests can help us better understand how a third-party library functions in the scenarios that we intend to use them.
 
-3. **Learning _log4j_**
+4. **Learning (Boundary) Tests Are Better Than Free** <a name="boundaries-3"></a>
+    - Learning tests verify that the third-party packages we are using work the way we expect them to. Additionally, if third-party libraries are changed in a way that makes them incompatible with our tests, we find out right away. This helps us manage code breaking changes introduced by third-party libraries and ease the pain of migration to newer versions. We had to learn how to use the library anyway, so we might as well write some tests while we're at it.
 
-4. **Learning Tests Are Better Than Free**
-
-5. **Using Code That Does Not Yet Exist**
+5. **Using Code That Does Not Yet Exist** <a name="boundaries-4"></a>
+    - Sometimes APIs are poorly documented black boxes, or simply don't offer the interface we'd like. In situations like this, consider designing the interface you wish you had, then create an [ADAPTER](https://en.wikipedia.org/wiki/Adapter_pattern) to encapsulate the interaction with the API. This provides a single place to change when the API evolves. Additionally, we can create fake adapters to test our interface, and create boundary tests to verify the API is being used correctly.
 
 6. **Clean Boundaries**
+    - Code at boundaries need clear separation and tests that define expectations. Avoid letting too much of our code know about third-party particulars and instead depend on something you control. Management of third-party boundaries can be accomplished by having very few places that refer to them (see [Using Third-Party Code](#boundaries-1) and [Using Code That Does Not Yet Exist](#boundaries-4)).
