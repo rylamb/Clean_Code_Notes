@@ -73,7 +73,7 @@
       ```
 
 12. **Don't Pass Null**
-    - Unless working with an API which expects you to pass _null_, you should avoid passing _null_ whenever possible. In most languages there is no good way to deal with a _null_ that is passed by a caller accidentally, thus it makes sense to forbid passing _null_ by default [_(see Lombok's @NonNull)_](https://projectlombok.org/features/NonNull). Taking this approach allows allows you to assume that a _null_ in an argument list is an indication of a problem.
+    - Unless working with an API which expects you to pass _null_, you should avoid passing _null_ whenever possible. In most languages there is no good way to deal with a _null_ that is passed by a caller accidentally, thus it makes sense to forbid passing _null_ by default _([see Lombok's @NonNull](https://projectlombok.org/features/NonNull))_. Taking this approach allows allows you to assume that a _null_ in an argument list is an indication of a problem.
 
 
 ## Boundaries <a name="boundaries"></a>
