@@ -1,22 +1,119 @@
 # Clean Code Notes
-1. [Clean Code]()
-2. [Meaningful Names]()
-3. [Functions]()
-4. [Comments]()
-5. [Formatting]()
-6. [Objects and Data Structures]()
-7. [Error Handling](#error-handling)
-8. [Boundaries](#boundaries)
-9. [Unit Tests](#unittests)
-
-
-## Clean Code <a name="clean-code"></a>
+1. [Meaningful Names](#meaningful-names)
+2. [Functions]()
+3. [Comments]()
+4. [Formatting]()
+5. [Objects and Data Structures]()
+6. [Error Handling](#error-handling)
+7. [Boundaries](#boundaries)
+8. [Unit Tests](#unittests)
 
 
 ## Meaningful Names<a name="meaningful-names"></a>
+1. **Use Intention-Revealing Names**
+    - Names should tell you why it exists, what it does, and how it's used.
 
+2. **Avoid Disinformation**
+    - Avoid ambiguous abbreviations. 
+    - Don't put things like _list_ in the name unless it's actually a list. 
+    - Avoid subtle name differences. Use consistent spelling.
+
+3. **Make Meaningful Distinctions**
+    - Avoid noninformative names (i.e. `a1, a2, ... aN`). 
+    - Avoid redudant noise words (i.e. _variable_ in a variable name, or _String_ in _nameString_). 
+    - Avoid arbitrary name changes for the sake of satisfying scope restrictions.
+
+4. **User Pronounceable Names**
+    - This makes no sense.
+        ```java
+        class DtaRcrd102 {
+            private Date genymdhms; // generation date, year, month, day, hour, minute, seconds)
+            private Date modymdhms;
+            private final String pszqint = "102";
+            /* ... */
+        }
+        ```
+        This is better.
+        ```java
+        class Customer {
+            private Date generationTimestamp;
+            private Date modificationTimestamp;
+            private final String recordId = "102;
+            /* ... */
+        }
+        ```
+
+5. **Use Searchable Names**
+    - Single letter names and numeric constants are difficult to search and should only be used as local variables. The length of a name should correspond to the size of its scope.
+
+6. **Avoid Encodings**
+    - _**Type Encoding:**_ Unless you're at Microsoft, don't use Hungarian Notation or other forms of type encoding.
+    - _**Member Prefixes:**_ Don't prefix member variables with _m\__. It's unseen clutter.
+    - _**Interfaces and Implementations:**_ Leave interfaces unadorned. For instance, instead of naming your interface `IShapeFactory` and the concrete class `ShapeFactory` instead name the interface `ShapeFactory` and the concrete class `ShapeFactoryImpl`.
+
+7. **Avoid Mental Mapping**
+    - Refrain from using variables names that reader's must mentally translate into an actual concept.
+
+8. **Class Names**
+    - Classes and objects should have noun or noun phrase names like _Customer_, _WikiPage_, _Account_, and _AddressParser_. 
+    - Avoid words like _Manager_, _Processor_, _Data_, or _Info_ in the name of a class.
+    - A class name should not be a verb.
+
+9. **Method Names**
+    - Methods should have verb or verb phrase names like _postPayment_, _deletePage_, or _save_.
+    - Accessors, mutators, and predicates should be named for their value and prefixed with _get_, _set_, and _is_ according to the javabean standard.
+    - When constructors are overloaded, use static factory methods with names that describe the arguments. Example:
+        ```java
+        // DO THIS
+        Complex fulcrumPoint = Complex.FromRealNumber(23.0);
+        
+        // DON'T DO THIS
+        Complex fulcrumPoint = new Complex(23.0);
+        ```
+
+10. **Don't Be Cute**
+    - Don't use slang, jokes, or colloquialisms.
+
+11. **Pick One World per Concept**
+    - Have a consistent lexicon. Avoid using _fetch_, _retrieve_, and _get_ to all mean the same thing. Likewise it's confusing to have things like a _controller_ and a _manager_ and a _driver_ in the same code base since they all similar in function.
+
+12. **Don't Pun**
+    - Avoid using the same word for two purposes. If many classes use the word _add_ to createa  new value by adding or concatenating two existing values, and you create a new class that puts a single parameter into a collection, don't use a method called _add_ for the sake of consistency. Instead opt for something like _insert_ or _append_ instead.
+ 
+13. **Use Solution Domain Names**
+    - People reading your code will be programmers, so feel free to use computer science terms, algorithm names, pattern names, math terms, etc. It isn't wise to draw every name from the problem domain because we don't want our coworkers running back and forth to product people asking what ever name means.
+
+14. **Use Problem Domain Names**
+    - When there is no "programmer-eese" for what you're doing, use the name from the problem domain.
+
+15. **Add Meaningful Context**
+    - Add context to names by enclosing them in well-named classes, functions, or namespaces. For example, the variables _firstName_, _lastName_, _street_, _houseNumber_, _city_, _state_, and _zipcode_ when taken together clearly indicate an address, but when taken individually (for example _state_) lose context. By encapsulating these variables in an _Address_ class and accessing then through `Address.getState()` you add clarity. Consider using prefixes (i.e. _addrState_) only as a last resort.
+
+16. **Don't Add Gratuitous Context**
+    - Shorter names are generaly better than longer ones, as long as they're clear. Add no more context to a name than necessary. For example, in an imaginary application called "Gas Station Deluxe" it's a bad idea to prefix every class with GSD. When you hit _G_ in your IDE you're awarded with a mile-long list of every class in the system. Likewise, say you invented a _MailingAddress_ class in _GSD_'s accounting module and named it _GSDAccountAddress_. Later, you need a mailing address for your customer contact application. Does it still make sense to use _GSDAccountAddress_? The name doesn't make sense anymore even if the functionality does.
 
 ## Functions <a name="functions"></a>
+1. **Small!**
+
+2. **Do One Thing**
+
+3. **One Level of Abstraction per Function**
+
+4. **Switch Statements**
+
+5. **Use Descriptive Names**
+
+6. **Function Arguments**
+
+7. **Have No Side Effects**
+
+8. **Command Query Separation**
+
+9. **Prefer Exceptions to Returning Error Codes**
+
+10. **Don't Repeat Yourself**
+
+11. **Structured Programming**
 
 
 ## Comments <a name="comments"></a>
@@ -79,17 +176,17 @@
 ## Boundaries <a name="boundaries"></a>
 1. **Using Third-Party Code** <a name="boundaries-1"></a>
     - Consider the following code:
-        ```
+        ```java
         Map sensors = new HashMap();
         Sensor s = (Sensor)sensors.get(sensorId);
         ```
        In this scenario, the client carries the responsibility of getting an object from the map an casting it to the correct type. This code fails effectively tell it's whole story and can be cleaned up with the use of generics.
-       ```
+       ```java
        Map<Sensor> sensors = new HashMap<>();
        Sensor s = sensors.get(sensorId);
        ```
        Additionally, `Map` is a broad interface containing a number of default methods such as `clear()`. If we begin passing this Map around, suddenly any method that gets a hold of this object has the ability to start deleting items from it, even if we don't necessarily need/want them to. In this example we might restrict editting by using immutable or unmodifiable maps via `Map.of()` or `ImmutableMap.of()`. But what if we want more fine-grained control of what methods are available, and what if the underlying code of this third-party interface changes? Now consider the following:
-       ```
+       ```java
        public class Sensors {
            private Map sensors = new HashMap();
            
