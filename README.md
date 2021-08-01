@@ -7,6 +7,7 @@
 6. [Error Handling](#error-handling)
 7. [Boundaries](#boundaries)
 8. [Unit Tests](#unittests)
+9. [Classes](#classes)
 
 
 ## Meaningful Names<a name="meaningful-names"></a>
@@ -243,3 +244,9 @@
     - _**Self-Validating:**_ Tests should have a boolean output. Either the pass or fail.
     
     - _**Timely:**_ Tests need to be written in a timely fashion. Unit tests should be written _just before_ production code that makes them pass. If you write tests after the production code, then you may find the production code hard to test. Worse, you may find yourself writing tests to fit the production code, rather than production code that satisfies the tests.
+
+
+## Classes <a name="unittests"></a>
+1. **Class Organization**
+2. **Classes Should Be Small**
+3. **Organizing for Change**
