@@ -134,7 +134,7 @@
     - Starting with a _try-catch-finally_ helps you define what the user of that code should expect, no matter what goes wrong with the code that is executed in the _try_. We can then proceed to build the rest of the logic that we need, and can pretend that nothing goes wrong. Try to write tests that force exceptions, and then add behavior to your handler to satisfy your tests.
 
 3. **Use Unchecked Exceptions**
-    - The price of checked exceptions is an [_Open/Closed Principle_](https://springframework.guru/principles-of-object-oriented-design/open-closed-principle/) violation. If you throw a checked exception fro a method in your code and the _catch_ is three levels above, you must declare that exception in the signature of each method between you and the _catch_. This means any changes at a a low level can force cascading signature changes up to the high level. In general, checked exceptions aren't worth it.
+    - The price of checked exceptions is an [_Open/Closed Principle_](https://springframework.guru/principles-of-object-oriented-design/open-closed-principle/) violation. If you throw a checked exception from a method in your code and the _catch_ is three levels above, you must declare that exception in the signature of each method between you and the _catch_. This means any changes at a a low level can force cascading signature changes up to the high level. In general, checked exceptions aren't worth it.
 
 4. **Provide Context With Exceptions**
     - Stack traces can't tell you the intent of an operation. Create informative messages to pass with exceptions. Mention the operation that failed and the type of failure.
@@ -246,7 +246,47 @@
     - _**Timely:**_ Tests need to be written in a timely fashion. Unit tests should be written _just before_ production code that makes them pass. If you write tests after the production code, then you may find the production code hard to test. Worse, you may find yourself writing tests to fit the production code, rather than production code that satisfies the tests.
 
 
-## Classes <a name="unittests"></a>
+## Classes <a name="classes"></a>
 1. **Class Organization**
-2. **Classes Should Be Small**
-3. **Organizing for Change**
+    - Class organization occur such that the class begins with public static constants, followed by private static variables, then private instance variables. Below variables should be public functions with each private utilities called by a public function following after the public function itself. This follows the stepdown rule and helps the program read like a newspaper article.
+    - _**Encapsulation:**_ Look to maintain privacy, then loosen encapsulation as a last resort. For testing purposes, make things in the protected or package scope as necessary.
+3. **Classes Should Be Small**
+    - _**The Single Responsibility Principle:**_ A class or module should have one, and only one, reason to change. In other words, one responsibility.
+    - _**Cohesion:**_ Classes should have a small number of instance variables, with each method manipulating one or more of those variables.
+5. **Organizing for Change**
+    - Structure systems so that we mess with as little as possible when we update them with new or changed features. Ideally we incorporate new features by extending the system, not by making modifications to existing code. For example, break large classes up in to smaller classes that extend a parent class. This follows the [_Open/Closed Principle_](https://springframework.guru/principles-of-object-oriented-design/open-closed-principle/).
+    - _**Isolating from Change:**_ Decouple classes by making them depend on abstractions rather than concrete details. This principle is know as the [_Dependency Inversion Principle (DIP)_](https://en.wikipedia.org/wiki/Dependency_inversion_principle). In the following example, the functionality for retrieving a stock price is abstracted away into the `StockExchange` interface and provided as a dependency to the `Portfolio` class.
+        ```java
+        public interface StockExchange {
+            Money currentPrice(String symbol);
+        }
+
+        public Portfolio {
+            private StockExchange exchange;
+
+            public Portfolio(StockExchange exchange) {
+                this.exchange = exchange;
+            }
+            // ...
+        }
+        ```
+        This also means we can easily test this by stubbing the `StockExchange` functionality.
+        ```java
+        public class PortfolioTest {
+            private FixedStockExchangeStub exchange;
+            private Portfolio portfolio;
+
+            @Before
+            protected void setUp() throws Exception {
+                exchange = new FixedStockExchangeStub();
+                exchange.fix("MSFT", 100);
+                portfolio = new Portfolio(exchange);
+            }
+
+            @Test
+            public void GivenFiveMSFTTotalShouldBe500() throws Exception {
+                portfolio.add(5, "MSFT")
+                Assert.assertEquals(500, portfolio.value());
+            }
+        }
+        ```
