@@ -8,6 +8,7 @@
 7. [Boundaries](#boundaries)
 8. [Unit Tests](#unittests)
 9. [Classes](#classes)
+10. [Systems](#systems)
 
 
 ## Meaningful Names<a name="meaningful-names"></a>
@@ -290,3 +291,46 @@
             }
         }
         ```
+
+## Systems <a name="systems"></a>
+1. **Separate Constructing a System from Using It**
+    - Take for example the following code:
+        ```java
+        public Service getService() {
+            if (service == null)
+                service = new MyServiceImpl(...);
+            return service;
+        }
+        ```
+        Here we use _LAZY INITIALIZATION/EVALUATION_ to avoid incurring the overhead of construction unless we actually need the object, resulting in faster startup. We also ensure `null` is never returned. However, we now have a hard-coded dependency on `MyServiceImpl` and everything it uses. This also means that for testing we'll need to ensure the appropriate mocks are created before this method is called during unit testing. Because we have construction logic mixed with normal runtime processing, we should test all execution paths. Having both of these responsibilities means we are also breaking the _Single Responsibility Principle_. One instance of _LAZY INITIALIZATION_ isn't necessarily a problem, but multiple instances like this scatters any global setup strategy across the application, causing a breakdown in modularity. We should try to separate the startup process from normal runtime logic to ensure a global, consistent strategy for resolving dependencies.
+    - _**Separation of Main**_
+        One easy way to achieve this is to move all aspects of construction to `main`, or modules called by `main`, and to design the rest of the system assuming all objects have been constructed and wired appropriately.
+    - _**Factories**_
+        Sometimes we need to make the application responsible for _when_ an object gets created. In this case we can use the [_ABSTRACT FACTORY_](https://en.wikipedia.org/wiki/Abstract_factory_pattern) pattern to give control of _when_ to build something, while keeping the details of construction separate from the application code.
+    - _**Dependency Injection**_
+        _Dependency Injection (DI)_ is the application of _Inversion of Control (IoC)_ to dependency management. Inversion of Control moves secondary responsibilities from an object to other objects that are dedicated to the purpose, thereby supporting the _Single Responsibility Principle_. In the context of dependency management, an object should not take responsibility for instantiating dependencies itself. Instead, it should pass this resonsibility to another "authoritative" mechanism, thereby inverting control. This will usually either be `main` or a special-purpose container.
+        
+        JNDI lookups are a "partial" implementation of DI, where an object asks a directory server to provide a "service" matching a particular name.
+            ```java
+            MyService myService = (MyService)(jndiContext.lookup("NameOfMyService"));
+            ```
+        
+        In true Dependency Injection, the class takes no direct steps to resolve dependencies. Instead, it provides setter methods or constructor arguments that are used to _inject_ dependencies. During construction, the DI container instantiates the required objects and uses the constructor arguments or setter methods provided to wire together the dependencies. Which dependent objects are actually used is specified through a configuration file or programmatically in a special-purpose construction module. And example of this is the [_SPRING FRAMEWORK_](https://en.wikipedia.org/wiki/Spring_Framework).
+        
+        _LAZY INITIALIZATION_ is still useful with DI. Most DI containers won't construct an object until needed. Additionally, many of these containers provide mechanisms for invoking factories or for constructing proxies, which could be used for _LAZY INITIALIZATION_ and similar optimizations.
+
+2. **Scaling Up**
+
+3. **Java Proxies**
+
+4. **Pure Java AOP Frameworks**
+
+5. **AspectJ Aspects**
+
+6. **Test Drive the System Architecture**
+
+7. **Optimize Decision Making**
+
+8. **Use Standards Wisely, When They Add _Demonstrable_ Value**
+
+9. **Systems Need Domain-Specific Languages**
