@@ -9,6 +9,7 @@
 8. [Unit Tests](#unittests)
 9. [Classes](#classes)
 10. [Systems](#systems)
+11. [Emergence](#emergence)
 
 
 ## Meaningful Names<a name="meaningful-names"></a>
@@ -293,6 +294,8 @@
         ```
 
 ## Systems <a name="systems"></a>
+_"An optimal system architecture consists of modularized domains of concern, each of which is implemented with Plain Old Java (or other) Objects. The different domains are integrated together with minimally invasive Aspects or Aspect-like tools. This architecture can be test-driven, just like the code."_
+
 1. **Separate Constructing a System from Using It**
     - Take for example the following code:
         ```java
@@ -319,18 +322,34 @@
         
         _LAZY INITIALIZATION_ is still useful with DI. Most DI containers won't construct an object until needed. Additionally, many of these containers provide mechanisms for invoking factories or for constructing proxies, which could be used for _LAZY INITIALIZATION_ and similar optimizations.
 
-2. **Scaling Up**
-
 3. **Java Proxies**
+    - Aspect Oriented Programming uses modular constructs called _aspects_ which specify which points in the system should have their behavior modified in some consistent way to support a particular concern. Java proxies are suitible in simple situations, such as wrapping method calls in individual objects or classes. Unfortunately this only works with interfaces and can add significant code volume and complexity. Additionally, this solution doesn't provide a mechanism for specifying system-wide execution points of interest.
 
 4. **Pure Java AOP Frameworks**
+    - Proxies are used internally in Java frameworks such as Spring AOP to implement aspects in pure Java. In Spring, you write your business logic as _Plain-Old Java Objects_ that focus purely on their domain, making them simpler and easier to test. Application infrastructure and cross-cutting concerns are implemented using configuration files or APIs. These configurations drive the dependency injection container, which instantiates objects and wires them together on demand. Each "bean" is like part of a nested russian doll, with a domain object wrapped by a data accessor object (DAO) wrapped by a JDBC driver data source. The client thinks it invokes a method on the domain object, but it's actually invoking the outermost of a set of nested _DECORATOR_ objects that extend the behavior of the domain object.
 
-5. **AspectJ Aspects**
-
-6. **Test Drive the System Architecture**
 
 7. **Optimize Decision Making**
+    - _"The agility provided by a POJO system with modularized concerns allows us to make optimal, just-in-time decisions, based on the most recent knowledge. The complexity of these decisions is also reduced."_
 
 8. **Use Standards Wisely, When They Add _Demonstrable_ Value**
+    - _"Standards make it easier to reuse ideas and components, recruit people with relevant experience, encapsulate good ideas, and wire components together. However, the process of creating standards can sometimes take too long for industry to wait, and some standards lose touch with the real needs of the adopters they are intended to serve."_
 
 9. **Systems Need Domain-Specific Languages**
+    - _"Domain-Specific Languages allow all levels of abstraction and all domains in the application to be expressed as POJOs, from high-level policy to low-level details."_
+
+
+## Emergency <a name="emergence"></a>
+We can facilitate the emergency of good designs by following simple rules. The rules included in the following subsections are listed in order of importance.
+
+1. **Runs All the Tests**
+    - The system must act as intended. Comprehensive testing verifies the functionality of a system, and systems that cannot be verified should not be deployed. Making testable systems pushes towards a design where classes are small and single purpose and decoupled.
+
+2. **No Duplication**
+    - The [_TEMPLATE METHOD_](https://en.wikipedia.org/wiki/Template_method_pattern) pattern is a common technique for removing higher level duplication. Achieving reuse in the small can cause system complexity to shrink drastically.
+
+3. **Expressive**
+    - Code should clearly express the intent of its author. This can be done by choosing good names, keeping functions and classes small, and using standard nomenclatures. For instance, using pattern names such at _COMMAND_ or _VISITOR_ in the name of a class that implements those patterns, you can describe your design to other developers. All of this applies to tests as well, since tests act as documentation by example.
+
+4. **Minimal Classes and Methods**
+    - Keep the overall system small while also keeping functions and classes small. Do not be overly dogmatic, and remember that this is the lowest priority our four rules.
