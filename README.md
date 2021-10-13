@@ -339,7 +339,7 @@ _"An optimal system architecture consists of modularized domains of concern, eac
     - _"Domain-Specific Languages allow all levels of abstraction and all domains in the application to be expressed as POJOs, from high-level policy to low-level details."_
 
 
-## Emergency <a name="emergence"></a>
+## Emergence <a name="emergence"></a>
 We can facilitate the emergency of good designs by following simple rules. The rules included in the following subsections are listed in order of importance.
 
 1. **Runs All the Tests**
