@@ -10,6 +10,7 @@
 9. [Classes](#classes)
 10. [Systems](#systems)
 11. [Emergence](#emergence)
+12. [Concurrency](#concurrency)
 
 
 ## Meaningful Names<a name="meaningful-names"></a>
@@ -353,3 +354,29 @@ We can facilitate the emergency of good designs by following simple rules. The r
 
 4. **Minimal Classes and Methods**
     - Keep the overall system small while also keeping functions and classes small. Do not be overly dogmatic, and remember that this is the lowest priority our four rules.
+
+
+## Concurrency <a name="concurrency"></a>
+1. **Myths and Misconceptions**
+2. **Concurrency Defense Principles**
+    - **Single Responsibility Principle**
+    - **Limit the Scope of Data**
+    - **Use Copies of Data**
+    - **Threads Should Be as Independent as Possible**
+
+4. **Know Your Library**
+5. **Know Your Execution Models**
+    - **Producer-Consumer**
+    - **Readers-Writers**
+    - **Dining Philosophers**
+6. **Beware Dependencies Between Synchronized Methods**
+7. **Keep Synchronized Sections Small**
+8. **Writing Correct Shut-Down Code Is Hard**
+9. **Testing Threaded Code**
+    - **Treat Spurious Failures as Candidate Threading Issues**
+    - **Get Your Nonthreaded Code Working First**
+    - **Make Your Threaded Code Pluggable**
+    - **Make Your Threaded Code Tunable**
+    - **Run with More Threads Than Processors**
+    - **Run on Different Platforms**
+    - **Instrument Your Code to Try and Force Failures
