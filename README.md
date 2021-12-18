@@ -1,6 +1,6 @@
 # Clean Code Notes
 1. [Meaningful Names](#meaningful-names)
-2. [Functions]()
+2. [Functions](#functions)
 3. [Comments]()
 4. [Formatting]()
 5. [Objects and Data Structures]()
