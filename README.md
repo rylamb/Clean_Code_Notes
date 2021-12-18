@@ -98,27 +98,41 @@
 
 ## Functions <a name="functions"></a>
 1. **Small!**
+    - The smaller the better. If possible, try to keep function smaller than four lines. At the very least, try to keep the entire function on one screen.
 
 2. **Do One Thing**
+    - Functions should do one thing. They should do it well. They should do it only. It should be obvious what it does.
 
 3. **One Level of Abstraction per Function**
+    - Mixing levels of abstraction can be confusing and breaks the principle of "Do One Thing". For instance, if a function retrieves an html page, then attempts to parse it, the function is mixing levels of abstraction and should be broken up.
 
 4. **Switch Statements**
+    - Avoid switch statements where possible. However, sometimes a switch statement is unavoidable. When a switch statement is unavoidable it is better to try and bury it in an abstract class so it isn't seen or repeated. We can accomplish this by using polymorphism that leverages the abstract class. Additionally, we can improve clarity of switch statements by use descriptive enums for cases.
 
 5. **Use Descriptive Names**
+    - Long and descriptive names are better than short and ambiguous ones. Be consistent with the phrases that are used so that they tell a story.
 
 6. **Function Arguments**
+    - The ideal number of arguments is zero. Next comes one, followed by two. Three arguments should be avoided where possible. More than three should require special justification and then probably shouldn't be used anyway.
+    - _**Flag Arguments:**_ Boolean arguments are a poor practice and can easily cause confusion. It also immediately declares that a function does more than one thing. If possible, functions should be refactored to remove the need for a flag, or at the very least signatures can be overloaded to hide flag arguments.
+    - _**Argument Objects:**_ When functions need to take more than two or three arguments, it is likely that some of those arguments ought to be wrapped in their own class.
 
 7. **Have No Side Effects**
+    - Side effects are lies that often violate the "Do One Thing" principle. For instance, if a function `checkPassword()` internally calls `Session.initialize()`, this is a side effect because at no point was there an indication that a session would be initialized in this function.
+    - _**Output Arguments:**_ Calling `appendFooter(s)` would seem to indicate the we're appending something to `s`, and we can verify this by checking the function signatures, but we shouldn't have to. We can make the functionality more obvious by having the function modify the internal state of the class where it resides, i.e. `report.appendFooter()`.
 
 8. **Command Query Separation**
+    - Functions should either do something or answer something, but not both. Either your function should change the state of an object, or it should return some information about that object.
 
 9. **Prefer Exceptions to Returning Error Codes**
+    - Returning error codes from command functions is a subtle violation of command query separation. It promotes commands being used as expressions  in the predicates of _if_ statements, i.e. `if (deletePage(page) == E_OK)`. It is better to use exceptions, which allow for the abstraction of error processing code from the happy path code.
+    - _**Extract Try/Catch Blocks:**_ _try/catch_ blocks can be ugly in their own right. They can confuse the structure of code and mix error processing with normal processing. Where possible, you should extract the bodies of the _try_ and _catch_ blocks out into functions of their own.
 
 10. **Don't Repeat Yourself**
+    - Avoid duplication of code wherever possible. Use polymorphism and design patterns strategically to prevent the need to duplicate code.
 
 11. **Structured Programming**
-
+    - To briefly summarize Edsger Dijkstra's rules of structure programming, every function and block within a function should have one entry and one exit. This means there should be one _return_ statement, no _break_ or _continue_ statements, and never any _goto_ statements. However, it's generally only larger functions where such rules provide significant benefit. By keeping functions small, then the occasional _return_, _break_, or _continue_ statement does no harm and can sometimes be more expressive.
 
 ## Comments <a name="comments"></a>
 
