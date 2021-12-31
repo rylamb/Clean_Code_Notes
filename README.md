@@ -545,4 +545,4 @@ We can facilitate the emergency of good designs by following simple rules. The r
     - **Make Your Threaded Code Tunable**
     - **Run with More Threads Than Processors**
     - **Run on Different Platforms**
-    - **Instrument Your Code to Try and Force Failures
+    - **Instrument Your Code to Try and Force Failures**
