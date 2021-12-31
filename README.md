@@ -3,7 +3,7 @@
 2. [Functions](#functions)
 3. [Comments](#comments)
 4. [Formatting](#formatting)
-5. [Objects and Data Structures]()
+5. [Objects and Data Structures](#objects-and-data-structures)
 6. [Error Handling](#error-handling)
 7. [Boundaries](#boundaries)
 8. [Unit Tests](#unittests)
@@ -151,6 +151,7 @@ Good comments can be useful, but bad comments waste space and provide no benefit
 ## Formatting <a name="formatting"></a>
 1. **The Purpose of Formatting**
     - Code formatting is _important_. More important than simply "getting it working". The functionality that you create today has a good chance of changing, and the readability of your code will have a profound effect on those changes. Coding style and readability sets precedents that continue to affect maintainability and extensibility long after the original code has been changed beyond recognition.
+
 3. **Vertical Formatting**
     - **The Newspaper Metaphor** - Think of a well-written newspaper article. It is read vertically with a headline at the top telling you what the story is about. The first paragraph gives a synopsis of the whole story, hiding all the details while giving you the broad-brush concepts. As you continue downward, details increase. Your code should follow a similar pattern. Additionally, a newspaper is composed of many articles; most are very small. Very few articles contain as much text as a page can hold. This makes a newspaper _usable_.
     - **Vertical Openness Between Concepts** - Blank lines increase vertical readability and groups of lines represent a complete thought. They should be used to separate package declarations, imports, and each function.
@@ -161,6 +162,7 @@ Good comments can be useful, but bad comments waste space and provide no benefit
         - **Dependent Functions** - If one function calls another, they should be vertically cloase, and the caller should be above the callee, if at all possible.
         - **Conceptual Affinity** - Certian bits of code _want_ to be near other bits. They have a certain affinity, and the stronger the affinity, the less vertical distance there should be between them. Affinity might be based on a direct dependence, such as one function calling another, or a function using a variable, or because a group of functions perform a similar operation.
     - **Vertical Ordering** - In general we want function call dependencies to point in the downard direction. A function that is called should be below a function that does the calling *(This refers to Java, and is the exact opposite of languages like C and C++ that enforce function to be defined or declared _before_ they are used)*. This creates a nice flow down the source code module from high level to low level.
+
 4. **Horizontal Formatting**
     - **Horizontal Openness and Density** - Use horizontal white space to associate things that are strongly related and disassociate things that are more weakly related. Consider the following code:
         ```Java
@@ -228,10 +230,70 @@ Good comments can be useful, but bad comments waste space and provide no benefit
             public String renderer() throws Exception { return ""; }
             ```
     - **Dummy Scopes** - Sometimes the body of a _while_ or _for_ statement is a dummy, i.e. `while (dis.read(buf, 0, readBufferSize) != -1);`. When these cannot be avoided, it may be helpful to ensure that the body is properly indented and surrounded by braces.
+
 5. **Team Rules** - At the end of the day, every programmer has their own favorite formatting rules, but if you work on a team, then you should play by team rules. A team of developers should agree upon a single formatting style, and each member should use that style. Good software is composed of a set of documents that read nicely. They need to have a consistent and smooth style that is easy to read. The reader needs to be able to trust the formatting gestures they have seen in one file mean the same thing in another. This can only be accomplished if all developers on a team consistently follow the agreed upon formatting rules.
 
 ## Objects and Data Structures <a name="objects-and-data-structures"></a>
+1. **Data Abstraction** - Consider the differences between the following code snippets.
+    ```Java
+    /* Concrete Point */
+    public class Point {
+        public double x;
+        public double y;
+    }
+    ```
+    ```Java
+    /* Abstract Point */
+    public interface Point {
+        double getX();
+        double getY();
+        void setCartesian(double x, double y);
+        double getR();
+        double getTheta();
+        void setPolar(double r, double theta);
+    }
+    ```
+    Both represent the data of a point on a Cartesian plane, yet one exposes its implementation while the other completely hides it. The beauty of the abstract class is that there is no way to tell whether the implementation is in rectangular or polar coordinates. And yet the interface still unmistakably represents a data structure.
+    
+    However, it represents more than just a data structure. The methods enforce an access policy. You can read individual coordinates independently, but you must set the coordinates together as an atomic operation. The concrete class, on the other hand, is very clearly implemented in rectangular coordinates, and it forces us to manipulate those coordinates independently. This exposes implementation, even if the variables were private and we used single variable getters and setters.
+    
+    Hiding implementation is not just a matter of putting a layer of function between the variables. Classes should expose abstract interfaces that allow its users to manipulate the _essence_ of the data, without having to know its implementation.
+    
+3. **Data/Object Anti-Symmetry** - Objects hide their data behind abstractions and expose functions that operate on that data. Data structures expose their data and have no meaningful functions. They are virtual opposites. We can further expose the fundamental dichotomy between objects and data structures: `Procedural code (code using data structures) makes it easy to add new functions without changing the existing data structures. OO code, on the other hand, make it easy to add new classes without changing existing functions.` The complement is also true: `Procedural code makes it hard to add new data structures because all the functions must change. OO code makes it had to add new functions because all the classes must change.`
 
+Certain things that are hard for OO are easy for procedures, and the things that are hard for procedures are easy for OO. The idea that everything is an object is a myth, and sometimes you really do want simple data structures with procedures operating on them.
+
+5. **The Law of Demeter**
+    - The heuristic called _Law of Demeter_ says a module shoudl not know about the innards of the _objects_ it manipulates. Objects hide their data and expose operations. This means an object should not expose its internal structure through accessors, because to do so  is to expose, rather than to hide, its internal structure. More precisely, the Law of Demeter says that a method _f_ of a class _C_ should only call the methods of these:
+        - _C_
+        - An object created by _f_
+        - An object passed as an argument to _f_
+        - An object held in an instance variable of _C_
+
+    The method should _not_ invoke methods on objects that are returned by any of the allowed functions. The following code appears to violate the Law of Demeter because it calls the `getScratchDir()` function on the return value of `getOptions()` and then calls `getAbsolutePath()` on the return value of `getScratchDir()`. 
+    ```Java
+    final String outputDir = ctxt.getOptions().getScratchDir().getAbsolutePath();
+    ```
+    - **Train Wrecks** - The code example above is sometimes called a _train wreck_ because it looks like a bunch of coupled train cars. It is generally better to split this up as follows:
+        ```Java
+        Options opts = ctxt.getOptions();
+        File scratchDir = opts.getScratchDir();
+        final String outputDir = scratchDir.getAbsolutePath();
+        ```
+        Whether this code is a vilation of Demeter depends on whether or not _ctxt_, _Options_, and _ScratchDir_ are objects or data structures. If they are objects, then their internal structure should be hidden, and so knowledge of their innards is a clear violation of the Law of Demeter. On the other hand, if they are just data structures with no behavior, then they naturally expose their internal structure, so Demeter does not apply.
+        
+        The use of accessor functions confuses this issue. Had the code been written as follows, then we probably wouldn't be asking about Demeter violations. `final String outputDir = ctxt.options.scratchDir.absolutePath;`
+    - **Hybrids** - Sometimes this confusion leads to hybrid structures that are half object and half data structure. They have functions that do significant things, and they also have either public variables or public accessors and mutators that, for all intents and purposes, make the private variables public, tempting other external functions to use those variables the way a procedural program would use a data structure. These hybrids make it hard to add new functions but also make it hard to add new data structures. They are the worst of both worlds. Avoid creating them.
+    - **Hiding Structure** - What if _ctxt_, _options_, and _scratchDir_ are objects with real behavior? Their internal structure should be hidden, and we shouldn't be able to navigate through them. We may instead try to get an absolute path with `ctxt.getAbsolutePathOfScratchDirectoryOption();` or `ctx.getScratchDirectoryOption().getAbsolutePath();` The first option could lead to an explosion of methods in the ctxt object. The second assumes that `getScratchDirectoryOption()` returns a data structure, and not an object. Neither option is great.
+
+    If _ctxt_ is an object, then we should tell it to _do something_; we should not be asking about its internals. Suppose we determine that the actual intent of getting the absolute path of the scratch directory was to create a scratch file of a given name. In that circumstance we could instead use the following code.
+    ```Java
+    BufferedOutputStream bos = ctxt.createScratchFileStream(classFileName);
+    ```
+    This allows _ctxt_ to hide its internals and prevent the current function from having to vilate the Law of Demeter by navigating through objects it shouldn't know about.
+6. **Data Transfer Objects**
+    - The quintessential form of a data structure is a class with public variables and no functions. This is sometimes called a data transfer object, or DTO. DTOs are very useful structures, especially when communicating with databases or parsing messages from sockets. They often become the first in a series of translation stages that convert raw data in a database into objects in the application code. Somewhat more common is the "bean" form. Beans have private variables manipulated by getters and setters. The quasi-encapsulation of beans seems to make some OO purists feel better but usually provides no other benefit.
+    - **Active Record** - These are a special form of DTO. They are data structures with public (or bean-accessed) variables; but they typically have navigational methods like _save_ and _find_. Typically these are direct translations from database tables, or other data sources. Unfortunately developers often try to treat these data structures as objects by putting business rule methods in them. The better solution is to treat the Active Record as a data structure and to createa separate objects that contain business rules and hide their internal data (which are probably just instances of the Active Record).
 
 ## Error Handling <a name="error-handling"></a>
 1. **Use Exceptions Rather Than Return Codes**
