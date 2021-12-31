@@ -1,7 +1,7 @@
 # Clean Code Notes
 1. [Meaningful Names](#meaningful-names)
 2. [Functions](#functions)
-3. [Comments]()
+3. [Comments](#comments)
 4. [Formatting]()
 5. [Objects and Data Structures]()
 6. [Error Handling](#error-handling)
@@ -135,6 +135,18 @@
     - To briefly summarize Edsger Dijkstra's rules of structure programming, every function and block within a function should have one entry and one exit. This means there should be one _return_ statement, no _break_ or _continue_ statements, and never any _goto_ statements. However, it's generally only larger functions where such rules provide significant benefit. By keeping functions small, then the occasional _return_, _break_, or _continue_ statement does no harm and can sometimes be more expressive.
 
 ## Comments <a name="comments"></a>
+Good comments can be useful, but bad comments waste space and provide no benefit, or worse, actively make things more confusing. It's better to err on the side of caution when using comments and trying to make your code as self-explaining as possible.
+1. **Good Comments**
+    - **Legal Comments** - Sometimes we need comments for legal reasons. For example, copyright and authorshipt statements. When possible, refer to a standard license or external document.
+    - **Informative Comments** - Useful when we want to provide basic information about something. For example `// format matched kk:mm:ss EEE, MMM dd, yyyy` when pattern matching with a regex can save engineering time trying to deciver exactly what your regular expression is doing.
+    - **Explanation of Intent** - Sometimes we need to go above and beyond providing basic information and provide the intent behind a decision. This way, even if you don't agree with a developers implementation, you can at least understand what they were trying to accomplish.
+    - **Clarification** - Sometimes it's helpful to translate the meaning of some obscure argument or return value into something readable. E.g. `assertTrue(a.compareTo(b) != 0); // a != b`. Generally it is better to find a way to make the argument or return value clear in it's own right, but this can be helpful in code that you cannot alter. However, there is substantial risk that a clarifying comment is incorrect, leading to more confusion later on. 
+    - **Warning of Consequences** - It's sometimes helpful to warn other programmers about certain consequences. For instances, a warning about a non-thread safe portion of code, or why certain long running tests may be disabled with an `@Ignore` statement.
+    - **TODO Comments** - It may be debatable if these are good comments are not, but they can be useful for documenting what should be done in the future but can't be done just yet. However, this isn't an execuse to leave bad code in the system and is not a replacement for a proper bug report/ticketing system. Minimize these unless absolutely necessary.
+    - **Amplification** - Some comments can be used to amplify the importance of something that may otherwise seem inconsequential.
+    - **Javadocs in Public APIs** - This should be self-explanatory. It's still important to ensure that your Javadocs are not misleading or inaccurate.
+2. **Bad Comments**
+    - Most comments other than the types listed above will fall into this category. Some examples of bad comments include mumbling, redundant, or misleading comments, mandated comments, journal comments, position markers, commented-out code, attributions or bylines, mandate comments or function headers, or anythin else that generally introduces unnecessary information or noise.
 
 
 ## Formatting <a name="formatting"></a>
