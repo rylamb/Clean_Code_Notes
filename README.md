@@ -2,7 +2,7 @@
 1. [Meaningful Names](#meaningful-names)
 2. [Functions](#functions)
 3. [Comments](#comments)
-4. [Formatting]()
+4. [Formatting](#formatting)
 5. [Objects and Data Structures]()
 6. [Error Handling](#error-handling)
 7. [Boundaries](#boundaries)
@@ -148,9 +148,87 @@ Good comments can be useful, but bad comments waste space and provide no benefit
 2. **Bad Comments**
     - Most comments other than the types listed above will fall into this category. Some examples of bad comments include mumbling, redundant, or misleading comments, mandated comments, journal comments, position markers, commented-out code, attributions or bylines, mandate comments or function headers, or anythin else that generally introduces unnecessary information or noise.
 
-
 ## Formatting <a name="formatting"></a>
-
+1. **The Purpose of Formatting**
+    - Code formatting is _important_. More important than simply "getting it working". The functionality that you create today has a good chance of changing, and the readability of your code will have a profound effect on those changes. Coding style and readability sets precedents that continue to affect maintainability and extensibility long after the original code has been changed beyond recognition.
+3. **Vertical Formatting**
+    - **The Newspaper Metaphor** - Think of a well-written newspaper article. It is read vertically with a headline at the top telling you what the story is about. The first paragraph gives a synopsis of the whole story, hiding all the details while giving you the broad-brush concepts. As you continue downward, details increase. Your code should follow a similar pattern. Additionally, a newspaper is composed of many articles; most are very small. Very few articles contain as much text as a page can hold. This makes a newspaper _usable_.
+    - **Vertical Openness Between Concepts** - Blank lines increase vertical readability and groups of lines represent a complete thought. They should be used to separate package declarations, imports, and each function.
+    - **Vertical Density** - Vertical density implies close association. Lines of code that are tightly related should appear vertically dense.
+    - **Vertical Distance** - Concepts that are closely related should be kept vertically close to each other. We want to avoid forcing readers to hop around through our souce files and classes.
+        - **Variable Declarations** - Most variables should be declared as close to their usage as possible. If we're keeping our function as short as possible, this usually means at the top of the function. Control variables for loops shoudl usually be declared within the loop statement.
+        - **Instance Variables** - These types of variables should be places at the top of a class. This should not increase the vertical distance of these variables, because in a well-designed class, they are used by many, if not all, of the other methods of the class.
+        - **Dependent Functions** - If one function calls another, they should be vertically cloase, and the caller should be above the callee, if at all possible.
+        - **Conceptual Affinity** - Certian bits of code _want_ to be near other bits. They have a certain affinity, and the stronger the affinity, the less vertical distance there should be between them. Affinity might be based on a direct dependence, such as one function calling another, or a function using a variable, or because a group of functions perform a similar operation.
+    - **Vertical Ordering** - In general we want function call dependencies to point in the downard direction. A function that is called should be below a function that does the calling *(This refers to Java, and is the exact opposite of languages like C and C++ that enforce function to be defined or declared _before_ they are used)*. This creates a nice flow down the source code module from high level to low level.
+4. **Horizontal Formatting**
+    - **Horizontal Openness and Density** - Use horizontal white space to associate things that are strongly related and disassociate things that are more weakly related. Consider the following code:
+        ```Java
+        private measureLine(String line) {
+            lineCount++;
+            int lineSize = line.length();
+            totalChars += lineSize;
+            lineWidthHistogram.addLine(lineSize, lineCount);
+            recordWidestLine(lineSize);
+        }
+        ```
+        The assignment operators are surrounded with white space to accentuate them. Since assignment statements have two distinct and major elements, the left and the right side, the spaces make the separation obvious. On the other hand, spaces were not placed between the function names and the opening parenthesis. This is because the function and its arguments are closely related. Separating them makes them appear disjoined instead of conjoined. The arguments within the function call parenthesis are separated to accentuate the comma and show that the arguments are separate. White space can also be used to accentuate the precedence of arithmetic operators, i.e. `(-b - Math.sqrt(determinant)) / (2*a);`.
+    - **Horizontal Alignment** - Generally strong alignment is not necessary, i.e.
+        ```Java
+        private    Socket        socket;
+        private    InputStream   input;
+        private    OutputStream  output;
+        ```
+        Instead, a more natural horizontal alignment generally suffices, i.e.
+        ```Java
+        private Socket socket;
+        private InputStream input;
+        private OutputStream output;
+        ```
+    - **Indentation** - A source file is a hierarchy rather like an outline. Each level of hierarchy is a scope into which names can be declared and in which declarations and executable statements are interpreted. To make this hierarchy of scopes visible, we indent lines of source code inproportion to their position in the hierarchy. Consider the following programs tht are syntactically and semantically identical:
+        ```Java
+        public class FitNesseServer implements SocketServer { private FitNesseContext context; public FitNesseServer(FitNesseContext contect) { this.context = context; }
+        public void serve(Socket s) { serve(s, 1000); } public void serve(Socket s, long requestTimeout) { try { FitNesseExpediter send = new FitNesseExpediter(s, context);
+        sender.setRequestParsingTimeLimit(requestTimeout); sender.start(); } catch (Exception e) { e.printStackTrace(); } } }
+        ```
+        
+        ```Java
+        public class FitNesseServer implements SocketServer {
+            private FitNesseContext context;
+            
+            public FitNesseServer(FitNesseContext contect) {
+                this.context = context;
+            }
+            
+            public void serve(Socket s) {
+                serve(s, 1000);
+            }
+            
+            public void serve(Socket s, long requestTimeout) {
+                try {
+                    FitNesseExpediter send = new FitNesseExpediter(s, context);
+                    sender.setRequestParsingTimeLimit(requestTimeout);
+                    sender.start();
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        ```
+        The eye can rapidly discern the structure of the indented file. You can almost instantly spot variables, constructors, accessors, and methods. Meanwhile, the unindented version is virtually impenetrable without intense study.
+        - **Breaking Indentation** - It is sometimes tempting to break the indentation rule for short _if_ statements, short _while_ loops, or short functions. Usually it is still better to avoid collapsing scopes down to one line. i.e.
+            ```Java
+            public String renderer() throws Exception {
+                return "";
+            }
+            ```
+            instead of
+            ```Java
+            public String renderer() throws Exception { return ""; }
+            ```
+    - **Dummy Scopes** - Sometimes the body of a _while_ or _for_ statement is a dummy, i.e. `while (dis.read(buf, 0, readBufferSize) != -1);`. When these cannot be avoided, it may be helpful to ensure that the body is properly indented and surrounded by braces.
+5. **Team Rules** - At the end of the day, every programmer has their own favorite formatting rules, but if you work on a team, then you should play by team rules. A team of developers should agree upon a single formatting style, and each member should use that style. Good software is composed of a set of documents that read nicely. They need to have a consistent and smooth style that is easy to read. The reader needs to be able to trust the formatting gestures they have seen in one file mean the same thing in another. This can only be accomplished if all developers on a team consistently follow the agreed upon formatting rules.
 
 ## Objects and Data Structures <a name="objects-and-data-structures"></a>
 
