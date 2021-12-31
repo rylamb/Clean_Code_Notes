@@ -524,9 +524,23 @@ We can facilitate the emergency of good designs by following simple rules. The r
 
 ## Concurrency <a name="concurrency"></a>
 1. **Myths and Misconceptions**
-2. **Concurrency Defense Principles**
-    - **Single Responsibility Principle**
-    - **Limit the Scope of Data**
+    - **Concurrency always improves performance** - Concurrency can _sometimes_ improve performance, but only when there is a lot of wait time that can be shared between multiple threads or multiple processors.
+    - **Design does not change when writing concurrent programs** - In fact, the design of a concurrent algorithm can be remarkably different from the design of a single-threaded system. The decoupling of _what_ and _when_ usually has a huge effect on the structure of the system.
+    - **Understanding concurrency issues is not important when working with a container such as a Web or EJB container** - In fact, you'd better know just what your container is doing and how to guard against the issues of concurrent update and deadlock.
+    - Here are a few more balanced statements regarding writing concurrent software:
+        - **Concurrency incurs some overhead**, both in performance as well as writing additional code.
+        - **Correct concurrency is complex**, even for simple problems.
+        - **Concurrency bugs aren't usually repeatable**, so they are often ignored as one-offs instead of the true defects they are.
+        - **Concurrency often requires a fundamental change in design strategy.**
+3. **Concurrency Defense Principles**
+    The following are some principles and techniques for defending your system from the problems of concurrent code.
+    - **Single Responsibility Principle** - The Single Responsibility Principle states that a given method/class/component should have a single reason to change. Concurrency design is complex enough to be a reason for change in it's own right and therefore deserves to be separated from the rest of the code. This often isn't the case. Here are some things to consider:
+        - **Concurrency-related code has its own life cycle of development**, change, and tuning.
+        - **Concurrency-related code has its own challenges**, which are different from and often more difficult than noncurrency-related code.
+        - The number of ways in which miswritten concurrency-based code can fail makes it challenging enough without the added burden of surrounding application code.
+        
+            _**Recommendation**: Keep your concurrency-related code separate from other code._
+    - **Limit the Scope of Data** 
     - **Use Copies of Data**
     - **Threads Should Be as Independent as Possible**
 
