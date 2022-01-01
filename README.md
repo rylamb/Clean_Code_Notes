@@ -153,18 +153,18 @@ Good comments can be useful, but bad comments waste space and provide no benefit
     - Code formatting is _important_. More important than simply "getting it working". The functionality that you create today has a good chance of changing, and the readability of your code will have a profound effect on those changes. Coding style and readability sets precedents that continue to affect maintainability and extensibility long after the original code has been changed beyond recognition.
 
 3. **Vertical Formatting**
-    - **The Newspaper Metaphor** - Think of a well-written newspaper article. It is read vertically with a headline at the top telling you what the story is about. The first paragraph gives a synopsis of the whole story, hiding all the details while giving you the broad-brush concepts. As you continue downward, details increase. Your code should follow a similar pattern. Additionally, a newspaper is composed of many articles; most are very small. Very few articles contain as much text as a page can hold. This makes a newspaper _usable_.
-    - **Vertical Openness Between Concepts** - Blank lines increase vertical readability and groups of lines represent a complete thought. They should be used to separate package declarations, imports, and each function.
-    - **Vertical Density** - Vertical density implies close association. Lines of code that are tightly related should appear vertically dense.
-    - **Vertical Distance** - Concepts that are closely related should be kept vertically close to each other. We want to avoid forcing readers to hop around through our souce files and classes.
+    - _**The Newspaper Metaphor**_ - Think of a well-written newspaper article. It is read vertically with a headline at the top telling you what the story is about. The first paragraph gives a synopsis of the whole story, hiding all the details while giving you the broad-brush concepts. As you continue downward, details increase. Your code should follow a similar pattern. Additionally, a newspaper is composed of many articles; most are very small. Very few articles contain as much text as a page can hold. This makes a newspaper _usable_.
+    - _**Vertical Openness Between Concepts**_ - Blank lines increase vertical readability and groups of lines represent a complete thought. They should be used to separate package declarations, imports, and each function.
+    - _**Vertical Density**_ - Vertical density implies close association. Lines of code that are tightly related should appear vertically dense.
+    - _**Vertical Distance**_ - Concepts that are closely related should be kept vertically close to each other. We want to avoid forcing readers to hop around through our souce files and classes.
         - **Variable Declarations** - Most variables should be declared as close to their usage as possible. If we're keeping our function as short as possible, this usually means at the top of the function. Control variables for loops shoudl usually be declared within the loop statement.
         - **Instance Variables** - These types of variables should be places at the top of a class. This should not increase the vertical distance of these variables, because in a well-designed class, they are used by many, if not all, of the other methods of the class.
         - **Dependent Functions** - If one function calls another, they should be vertically cloase, and the caller should be above the callee, if at all possible.
         - **Conceptual Affinity** - Certian bits of code _want_ to be near other bits. They have a certain affinity, and the stronger the affinity, the less vertical distance there should be between them. Affinity might be based on a direct dependence, such as one function calling another, or a function using a variable, or because a group of functions perform a similar operation.
-    - **Vertical Ordering** - In general we want function call dependencies to point in the downard direction. A function that is called should be below a function that does the calling *(This refers to Java, and is the exact opposite of languages like C and C++ that enforce function to be defined or declared _before_ they are used)*. This creates a nice flow down the source code module from high level to low level.
+    - _**Vertical Ordering**_ - In general we want function call dependencies to point in the downard direction. A function that is called should be below a function that does the calling *(This refers to Java, and is the exact opposite of languages like C and C++ that enforce function to be defined or declared _before_ they are used)*. This creates a nice flow down the source code module from high level to low level.
 
 4. **Horizontal Formatting**
-    - **Horizontal Openness and Density** - Use horizontal white space to associate things that are strongly related and disassociate things that are more weakly related. Consider the following code:
+    - _**Horizontal Openness and Density**_ - Use horizontal white space to associate things that are strongly related and disassociate things that are more weakly related. Consider the following code:
         ```Java
         private measureLine(String line) {
             lineCount++;
@@ -175,7 +175,7 @@ Good comments can be useful, but bad comments waste space and provide no benefit
         }
         ```
         The assignment operators are surrounded with white space to accentuate them. Since assignment statements have two distinct and major elements, the left and the right side, the spaces make the separation obvious. On the other hand, spaces were not placed between the function names and the opening parenthesis. This is because the function and its arguments are closely related. Separating them makes them appear disjoined instead of conjoined. The arguments within the function call parenthesis are separated to accentuate the comma and show that the arguments are separate. White space can also be used to accentuate the precedence of arithmetic operators, i.e. `(-b - Math.sqrt(determinant)) / (2*a);`.
-    - **Horizontal Alignment** - Generally strong alignment is not necessary, i.e.
+    - _**Horizontal Alignment**_ - Generally strong alignment is not necessary, i.e.
         ```Java
         private    Socket        socket;
         private    InputStream   input;
@@ -187,7 +187,7 @@ Good comments can be useful, but bad comments waste space and provide no benefit
         private InputStream input;
         private OutputStream output;
         ```
-    - **Indentation** - A source file is a hierarchy rather like an outline. Each level of hierarchy is a scope into which names can be declared and in which declarations and executable statements are interpreted. To make this hierarchy of scopes visible, we indent lines of source code inproportion to their position in the hierarchy. Consider the following programs tht are syntactically and semantically identical:
+    - _**Indentation**_ - A source file is a hierarchy rather like an outline. Each level of hierarchy is a scope into which names can be declared and in which declarations and executable statements are interpreted. To make this hierarchy of scopes visible, we indent lines of source code inproportion to their position in the hierarchy. Consider the following programs tht are syntactically and semantically identical:
         ```Java
         public class FitNesseServer implements SocketServer { private FitNesseContext context; public FitNesseServer(FitNesseContext contect) { this.context = context; }
         public void serve(Socket s) { serve(s, 1000); } public void serve(Socket s, long requestTimeout) { try { FitNesseExpediter send = new FitNesseExpediter(s, context);
@@ -229,7 +229,7 @@ Good comments can be useful, but bad comments waste space and provide no benefit
             ```Java
             public String renderer() throws Exception { return ""; }
             ```
-    - **Dummy Scopes** - Sometimes the body of a _while_ or _for_ statement is a dummy, i.e. `while (dis.read(buf, 0, readBufferSize) != -1);`. When these cannot be avoided, it may be helpful to ensure that the body is properly indented and surrounded by braces.
+    - _**Dummy Scopes**_ - Sometimes the body of a _while_ or _for_ statement is a dummy, i.e. `while (dis.read(buf, 0, readBufferSize) != -1);`. When these cannot be avoided, it may be helpful to ensure that the body is properly indented and surrounded by braces.
 
 5. **Team Rules** - At the end of the day, every programmer has their own favorite formatting rules, but if you work on a team, then you should play by team rules. A team of developers should agree upon a single formatting style, and each member should use that style. Good software is composed of a set of documents that read nicely. They need to have a consistent and smooth style that is easy to read. The reader needs to be able to trust the formatting gestures they have seen in one file mean the same thing in another. This can only be accomplished if all developers on a team consistently follow the agreed upon formatting rules.
 
@@ -274,7 +274,7 @@ Certain things that are hard for OO are easy for procedures, and the things that
     ```Java
     final String outputDir = ctxt.getOptions().getScratchDir().getAbsolutePath();
     ```
-    - **Train Wrecks** - The code example above is sometimes called a _train wreck_ because it looks like a bunch of coupled train cars. It is generally better to split this up as follows:
+    - _**Train Wrecks**_ - The code example above is sometimes called a _train wreck_ because it looks like a bunch of coupled train cars. It is generally better to split this up as follows:
         ```Java
         Options opts = ctxt.getOptions();
         File scratchDir = opts.getScratchDir();
@@ -283,8 +283,8 @@ Certain things that are hard for OO are easy for procedures, and the things that
         Whether this code is a vilation of Demeter depends on whether or not _ctxt_, _Options_, and _ScratchDir_ are objects or data structures. If they are objects, then their internal structure should be hidden, and so knowledge of their innards is a clear violation of the Law of Demeter. On the other hand, if they are just data structures with no behavior, then they naturally expose their internal structure, so Demeter does not apply.
         
         The use of accessor functions confuses this issue. Had the code been written as follows, then we probably wouldn't be asking about Demeter violations. `final String outputDir = ctxt.options.scratchDir.absolutePath;`
-    - **Hybrids** - Sometimes this confusion leads to hybrid structures that are half object and half data structure. They have functions that do significant things, and they also have either public variables or public accessors and mutators that, for all intents and purposes, make the private variables public, tempting other external functions to use those variables the way a procedural program would use a data structure. These hybrids make it hard to add new functions but also make it hard to add new data structures. They are the worst of both worlds. Avoid creating them.
-    - **Hiding Structure** - What if _ctxt_, _options_, and _scratchDir_ are objects with real behavior? Their internal structure should be hidden, and we shouldn't be able to navigate through them. We may instead try to get an absolute path with `ctxt.getAbsolutePathOfScratchDirectoryOption();` or `ctx.getScratchDirectoryOption().getAbsolutePath();` The first option could lead to an explosion of methods in the ctxt object. The second assumes that `getScratchDirectoryOption()` returns a data structure, and not an object. Neither option is great.
+    - _**Hybrids**_ - Sometimes this confusion leads to hybrid structures that are half object and half data structure. They have functions that do significant things, and they also have either public variables or public accessors and mutators that, for all intents and purposes, make the private variables public, tempting other external functions to use those variables the way a procedural program would use a data structure. These hybrids make it hard to add new functions but also make it hard to add new data structures. They are the worst of both worlds. Avoid creating them.
+    - _**Hiding Structure**_ - What if _ctxt_, _options_, and _scratchDir_ are objects with real behavior? Their internal structure should be hidden, and we shouldn't be able to navigate through them. We may instead try to get an absolute path with `ctxt.getAbsolutePathOfScratchDirectoryOption();` or `ctx.getScratchDirectoryOption().getAbsolutePath();` The first option could lead to an explosion of methods in the ctxt object. The second assumes that `getScratchDirectoryOption()` returns a data structure, and not an object. Neither option is great.
 
         If _ctxt_ is an object, then we should tell it to _do something_; we should not be asking about its internals. Suppose we determine that the actual intent of getting the absolute path of the scratch directory was to create a scratch file of a given name. In that circumstance we could instead use the following code.
         ```Java
@@ -293,7 +293,7 @@ Certain things that are hard for OO are easy for procedures, and the things that
         This allows _ctxt_ to hide its internals and prevent the current function from having to vilate the Law of Demeter by navigating through objects it shouldn't know about.
 6. **Data Transfer Objects**
     - The quintessential form of a data structure is a class with public variables and no functions. This is sometimes called a data transfer object, or DTO. DTOs are very useful structures, especially when communicating with databases or parsing messages from sockets. They often become the first in a series of translation stages that convert raw data in a database into objects in the application code. Somewhat more common is the "bean" form. Beans have private variables manipulated by getters and setters. The quasi-encapsulation of beans seems to make some OO purists feel better but usually provides no other benefit.
-    - **Active Record** - These are a special form of DTO. They are data structures with public (or bean-accessed) variables; but they typically have navigational methods like _save_ and _find_. Typically these are direct translations from database tables, or other data sources. Unfortunately developers often try to treat these data structures as objects by putting business rule methods in them. The better solution is to treat the Active Record as a data structure and to createa separate objects that contain business rules and hide their internal data (which are probably just instances of the Active Record).
+    - _**Active Record**_ - These are a special form of DTO. They are data structures with public (or bean-accessed) variables; but they typically have navigational methods like _save_ and _find_. Typically these are direct translations from database tables, or other data sources. Unfortunately developers often try to treat these data structures as objects by putting business rule methods in them. The better solution is to treat the Active Record as a data structure and to createa separate objects that contain business rules and hide their internal data (which are probably just instances of the Active Record).
 
 ## Error Handling <a name="error-handling"></a>
 1. **Use Exceptions Rather Than Return Codes**
@@ -533,13 +533,14 @@ We can facilitate the emergency of good designs by following simple rules. The r
         - **Concurrency bugs aren't usually repeatable**, so they are often ignored as one-offs instead of the true defects they are.
         - **Concurrency often requires a fundamental change in design strategy.**
 3. **Concurrency Defense Principles**
+
     The following are some principles and techniques for defending your system from the problems of concurrent code.
     - **Single Responsibility Principle** - The Single Responsibility Principle states that a given method/class/component should have a single reason to change. Concurrency design is complex enough to be a reason for change in it's own right and therefore deserves to be separated from the rest of the code. This often isn't the case. Here are some things to consider:
         - **Concurrency-related code has its own life cycle of development**, change, and tuning.
         - **Concurrency-related code has its own challenges**, which are different from and often more difficult than noncurrency-related code.
         - The number of ways in which miswritten concurrency-based code can fail makes it challenging enough without the added burden of surrounding application code.
         
-            _**Recommendation**: Keep your concurrency-related code separate from other code._
+        _**Recommendation**: Keep your concurrency-related code separate from other code._
     - **Limit the Scope of Data** 
     - **Use Copies of Data**
     - **Threads Should Be as Independent as Possible**
