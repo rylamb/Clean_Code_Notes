@@ -540,24 +540,47 @@ We can facilitate the emergency of good designs by following simple rules. The r
         - **Concurrency-related code has its own challenges**, which are different from and often more difficult than noncurrency-related code.
         - The number of ways in which miswritten concurrency-based code can fail makes it challenging enough without the added burden of surrounding application code.
         
-        _**Recommendation**: Keep your concurrency-related code separate from other code._
-    - **Limit the Scope of Data** 
-    - **Use Copies of Data**
-    - **Threads Should Be as Independent as Possible**
+                Recommendation**: Keep your concurrency-related code separate from other code.
+        
+    - **Limit the Scope of Data** - Use the _synchronized_ keyword or mutexes/semaphores to restrict access to critical sections of code that use shared objects. Restrict the number of such critical sections since the more places data is shared, the more likely an error will occur, and the harder it will be to troubleshoot.
+    
+            Recommendation: Take data encapsulation to heart; severely limit the access of any data that may be shared.
+        
+    - **Use Copies of Data** - If possible, consider avoiding shared data altogether. In some situations it may be possible to copy objects and treat them as read-only. In other cases it might be possible to copy objects, collect the results of multiple threads in these copies and then merge the results in a single thread.
+    
+    - **Threads Should Be as Independent as Possible** - Considering writing your threaded code such that each thread exists in its own world, without sharing data.
+    
+            Recommendation: Attempt to partition data into independent subsets that can be operated on by independent threads, possibly in different processors.
 
 4. **Know Your Library**
-5. **Know Your Execution Models**
-    - **Producer-Consumer**
-    - **Readers-Writers**
-    - **Dining Philosophers**
-6. **Beware Dependencies Between Synchronized Methods**
-7. **Keep Synchronized Sections Small**
-8. **Writing Correct Shut-Down Code Is Hard**
-9. **Testing Threaded Code**
-    - **Treat Spurious Failures as Candidate Threading Issues**
-    - **Get Your Nonthreaded Code Working First**
-    - **Make Your Threaded Code Pluggable**
-    - **Make Your Threaded Code Tunable**
-    - **Run with More Threads Than Processors**
-    - **Run on Different Platforms**
-    - **Instrument Your Code to Try and Force Failures**
+    - Make sure you understand the libraries you intend to use and consider the following when writing threaded code:
+        - Use the provided thread-safe collections.
+        - Use the executor framework for executing unrelated tasks.
+        - Use nonblocking solution when possible.
+        - Several library classes are not thread safe.
+6. **Know Your Execution Models** - Most concurrent problems you will encounter will be some form of the following three problems. Understand them and their solutions.
+    - [**Producer-Consumer**](https://en.wikipedia.org/wiki/Producer%E2%80%93consumer_problem)
+    - [**Readers-Writers**](https://en.wikipedia.org/wiki/Readers%E2%80%93writers_problem)
+    - [**Dining Philosophers**](https://en.wikipedia.org/wiki/Dining_philosophers_problem)
+7. **Beware Dependencies Between Synchronized Methods** - Dependencies between synchronized methods can cause subtle bugs in concurrent code. The _synchronized_ keyword can protect an individual method, but if there is more than one synchronized method on the same shared class, then your system may be written incorrectly.
+
+        Recommendation: Avoid using more than one method on a shared object.
+    
+9. **Keep Synchronized Sections Small** - The _synchronized_ keyword introduces a lock ensure that all code guarded by the same lock is guaranteed to have only one thread of execution at any given time. This locking creates delays and overhead. Design your code with as few critical sections as possible.
+
+        Recommendation: Keep your synchronized sections as small as possible. Consider synchronized blocks instead of synchronized methods.
+
+11. **Writing Correct Shut-Down Code Is Hard** - Graceful shutdown can be had to get correct, and can often result in deadlocks. Think about shut-down early and get it working early. Review existing algorithms as a reference.
+
+13. **Testing Threaded Code** - Write tests that have the potential to expose problems and run them frequently, with different programatic configurations and system configurations and load. If tests ever fail, track down the failure. Don't ignore a failure because it passes on a subsequent run.
+    - **Treat Spurious Failures as Candidate Threading Issues** - Bugs in concurrent code may be exceedingly rare. As tempting as it may be, do not ignore failures as one-offs.
+    - **Get Your Nonthreaded Code Working First** - Don't try to chase down nonthreading and threading bugs as the same time. Make sure your nonthreaded code works first since it will be easier to debug and test.
+    - **Make Your Threaded Code Pluggable** - Write your concurrency-supporting code such that it can be run in several configurations:
+        - One thread, several threads, varied as it executes.
+        - Threaded code interacts with something that can be both real and a test double.
+        - Execute with test doubles that run quickly, slowly, variable.
+        - Configure tests so they can run for a number of iterations.
+    - **Make Your Threaded Code Tunable** - Find ways to time the performance of your system under different configurations. Allow the number of threads to be easily tuned and consider allowing it to change while the system is running based on throughput and system utilization.
+    - **Run with More Threads Than Processors** - To encourage context switching, run with more threads than processors or core. The more frequently your code context switches, the more likely you'll encounter code that is missing a critical section or causes deadlocks.
+    - **Run on Different Platforms** - Different operating systems have different threading policies which impact code execution. Multithreaded code behaves differently in different environments, so it's worth testing on multiple platforms when relevant.
+    - **Instrument Your Code to Try and Force Failures** Use hand-coded or automated instrumentation to try to induce failures. This can be done by introducing waits and sleeps and yields, or by manipulating priority.
